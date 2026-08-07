@@ -1,0 +1,74 @@
+Linux Terminal works on REPL
+R.E.P.L - Read.Eval.Print.Loop
+Linux Terminal- Bash - Borne Again SHell
+______________________________________________________________
+Storing variable in another : 
+
+you usually store a variable as : 
+
+variable_name ='Content'
+then if you echo variable_name
+o/p :Content
+
+# In terminal if you do this set a variable you can undo it by unset variable_name
+
+ 
+#Note : there is an another way of storing any output of command or function 
+
+variable=$(command/function)
+
+
+
+
+#echo - prints whatever inpur is given after this 
+ex - echo Kartik 
+o/p- Kartik
+
+#Echo Tricks-
+> - overwrites
+
+ex-
+	 echo hello > file.txt
+so if i "cat file.txt"
+I'll get "hell" as an output but the catch is if I do this again 
+	echo Hi > file.txt
+Output will be for cat file.txt : Hi 
+
+so it overwrites any previous data present in the file its written into. "Use it carefully"
+
+>> - Append (overwrites brother)
+Catch is : it doesnot overwrite any previous data but retains it with the new one added to it .
+_______________________________________________________________________________________________________
+#grep Tricks -
+
+Normal -  grep "Keyword you want to search" filename/path
+
+Starting with Keyword -
+grep "^Keyword" filename/path
+
+Ending with Keyword - 
+grep "Keyword$" filename/path
+
+One word After keyword+keyword
+grep -A1 "keyword" filename/path
+
+One word Before Keyword+keyword
+grep -B1 "Keyword" filename/path
+
+After and before both - Context 
+grep -C1 "Keyword" filename/path
+
+#Note here the number of words you want to get print an be changes like A10,B10,C100 Depends on the number of data you have.
+
+Case Sensitive - 
+grep -i "Keyword" filename/path
+
+ONly print which match the Pattern
+grep -o "Keyword" filename/path #note - keyword can have any pattern like "^","$" and combinations of them
+
+You can combine the tricks or flags you say it in any manner . 
+
+
+_________________________________________________________________________________________________________________________________
+
+

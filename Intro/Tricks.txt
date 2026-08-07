@@ -1,0 +1,27 @@
+Tricks in Bash: 
+
+bash -n : it shows you that if teh script you ran was run sucessfully or if not shows error on exactly which line
+ex: bash -n loop.sh
+
+type "command": gives out which type of command is it like is it builtin etc etc
+
+file "filename": tell the type or content that is in the file like ASCII Text, Bourne again shell, etc
+
+echo $? : Tells the status of previous command execution status
+if 0 then the previous command ran successfully
+if anything else its failed.
+
+User Inputs: 
+
+
+
+
+you can use pipe if you are using "read" for getting input from user while prompting 
+
+ex :
+Script : 
+ read -p "Enter Number"; num
+     echo "Lucky Number : $num"
+Terminal : echo 10
+
+

@@ -1,0 +1,14 @@
+#!usr/bin/env/ bash
+
+greet() {
+	local name=$1 
+	echo "Hello! $name"
+#name is a global variable so use the local in front of variable if you dont want the variable to exist out of function
+
+}
+for name in "$@"; do
+	greet "$name"
+done
+
+greet Kartik
+

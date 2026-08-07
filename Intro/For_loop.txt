@@ -1,0 +1,18 @@
+So basically For Loop in Bash is like kinda :
+
+for "variable" in "arrays seperated by space"; do
+	echo"what you want to print"
+done
+
+so and example for "For_Loop" will be like this : 
+
+for thing in bat batch hag lmao; do
+	echo "thing is $thing"
+done
+
+o/p :
+thing is bat
+thing is batch
+thing is hag
+thing is lmao
+

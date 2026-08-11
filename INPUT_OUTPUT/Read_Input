@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+read -r input
+echo "You said $input"
+

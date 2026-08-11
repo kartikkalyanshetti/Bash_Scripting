@@ -1,0 +1,7 @@
+#!usr/bin/env bash
+
+if [[ -f File.txt ]]; then
+	echo "File.txt exists"
+else	
+	echo "File.txt doesnot exist"
+fi

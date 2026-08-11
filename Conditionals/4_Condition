@@ -1,0 +1,9 @@
+#!usr/bin/env bash
+
+until [[ -f File.txt ]]; do
+	echo "File.txt doesn't exists"
+	sleep 1
+done
+
+echo "File exist"
+

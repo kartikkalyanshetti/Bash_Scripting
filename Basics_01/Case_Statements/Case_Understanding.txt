@@ -1,0 +1,39 @@
+So Case statement is like 
+
+s=$1 ---> varible value given by user "$1"
+
+case "$s" in
+	condition) echo/function "$s" ;;  
+					here ;; means if the condition is met its out of loop
+	*) echo 'none matched' ;;   	*) is the default case if none pass. * basically means anything. 
+esac -------> use to end the case statement
+
+Above is the default statement 
+
+-----------------------------------------------------------------------------------------------------------
+what if ?
+Instead of writing statements again and again or you want certain condition to be met 
+
+you can use case statements like this :  d* | *d ) echo "Hello How are you "$s"";;
+
+| here pipe command acts as OR statement.
+
+-----------------------------------------------------------------------------------------------------------
+But what if ? 
+
+You have two or more condition to match from the file/text etc
+
+then you use ;& instead of ;; after the case 
+
+ex -
+case "$s" in 
+ d*) echo 'matched for d*';&
+ dave) echo 'matched for dave';&
+ *) echo 'none matched';&
+esac   
+
+
+-----------------------------------------------------------------------------------------------------------
+There is another one ;;& same stuff as above
+
+

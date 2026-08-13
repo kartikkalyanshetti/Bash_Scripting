@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+first_array=(
+	foo
+       	bar
+       	baz
+)
+
+##copying an array in bash :
+second_array=( "${first_array[@]}" )
+
+##pushing into an array:
+second_array+=(buddy go ahead)
+
+
+for item in "${second_array[@]}"; do
+	echo "Item is : $item"
+done
+
+

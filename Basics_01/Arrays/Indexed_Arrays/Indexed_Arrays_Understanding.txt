@@ -1,0 +1,36 @@
+
+Array decalaration : 
+
+array={foo far baz} 
+
+--------------------------
+
+printing particular index of array : 
+
+echo "1 : ${array[0]}"
+echo "2 : ${array[1]}"
+echo "3 : ${array[2]}"
+
+--------------------------
+
+printing array index backward : 
+
+
+echo "last: ${array[-1]}"
+echo "2nd last : ${array[-2]}"
+echo "first : ${array[-3]}"
+
+--------------------------
+printing the array as string : 
+
+echo "array as string : "${array[*]}"" 
+
+--------------------------
+printing the array as array at once : 
+
+
+echo "array as array : ${array[@]}"
+
+"${array[@]}" - why in double quotes "" is because if we have a string in array it may cause it to consider seperate. 
+
+Remember to always double quote in this case.

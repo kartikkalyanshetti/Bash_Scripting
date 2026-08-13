@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+array=(foo bar baz)
+
+for x in "${array[*]}"; do
+	echo "X is $x"
+done
+echo
+for AT in "${array[@]}"; do 
+	echo "@ is $AT"
+done
+
+echo "Length of array : "${#array[@]}""

@@ -459,19 +459,129 @@ bash -n script.sh
 bash -x script.sh
 ```
 
-### ShellCheck
+## 🔀 `case` Statement
+
+The `case` statement is used to match a value against multiple patterns.
+
+### Basic Syntax
 
 ```bash
-shellcheck script.sh
+case "$choice" in
+    1)
+        echo "Option 1"
+        ;;
+    2)
+        echo "Option 2"
+        ;;
+    *)
+        echo "Invalid option"
+        ;;
+esac
 ```
 
-> 🧠 **Debugging is part of learning.**
->
-> Breaking a script intentionally is often a better learning experience than simply reading working code.
+### 🔑 Case Terminators
+
+Bash provides three important ways to end a `case` pattern:
+
+| Terminator | Behavior                                                                     |
+| :--------: | ---------------------------------------------------------------------------- |
+|    `;;`    | Stop the `case` statement after the matching pattern                         |
+|    `;&`    | Continue directly to the commands of the **next pattern** without testing it |
+|    `;;&`   | Continue and **test the next pattern** as well                               |
+
+### `;;` — Normal Behavior
+
+Stops after the first matching pattern.
+
+```bash
+case "$value" in
+    1)
+        echo "One"
+        ;;
+    2)
+        echo "Two"
+        ;;
+esac
+```
+
+### `;&` — Fall Through
+
+Runs the commands of the **next pattern without checking whether it matches**.
+
+```bash
+case "$value" in
+    1)
+        echo "One"
+        ;&
+    2)
+        echo "Two"
+        ;;
+esac
+```
+
+If `$value` is `1`, the output is:
+
+```text
+One
+Two
+```
+
+### `;;&` — Continue Pattern Matching
+
+After executing the current pattern, Bash continues to the **next pattern and checks it**.
+
+```bash
+case "$value" in
+    1)
+        echo "One"
+        ;;&
+    1|2)
+        echo "One or Two"
+        ;;
+esac
+```
+
+If `$value` is `1`, both patterns match:
+
+```text
+One
+One or Two
+```
+
+### 🧠 Quick Memory Trick
+
+```text
+;;   → STOP
+
+;&   → NEXT pattern's commands
+       (don't test)
+
+;;&  → NEXT pattern
+       (test again)
+```
+
+> **`;;` stops, `;&` falls through, `;;&` keeps matching.**
+
+# 📈 Progress
+
+### Course Progress
+
+```text
+[████░░░░░░░░░░░░░░░░] 20%
+```
+
+## 📈 Learning Log
+
+| Date          | What I Learned                    |
+| :------------ | :-------------------------------- |
+| `11 Aug 2026` | Started Bash scripting            |
+| `13 Aug 2026` | Learned `case` statements in Bash |
+|               |                                   |
+|               |                                   |
 
 ---
 
-# 🧠 Concepts I'm Building
+## 🧠 Concepts I'm Building
 
 | Concept             | Status |
 | :------------------ | :----: |
@@ -483,6 +593,7 @@ shellcheck script.sh
 | User Input          |   🟡   |
 | Arguments           |   🟡   |
 | Conditions          |   🟡   |
+| `case` Statement    |    ✅   |
 | Loops               |   🟡   |
 | Functions           |    ⬜   |
 | Arrays              |    ⬜   |
@@ -496,31 +607,13 @@ shellcheck script.sh
 | Subshells           |    ⬜   |
 | Advanced Bash       |    ⬜   |
 
+---
 **Legend:**
 `✅ Completed` · `🟡 Learning` · `⬜ Not Started`
 
 ---
 
 
-
-# 📈 Progress
-
-### Course Progress
-
-```text
-[████░░░░░░░░░░░░░░░░] 20%
-```
-
-> 🎯 Progress will be updated as I complete the course.
-
-### Learning Log
-
-| Date          | What I Learned         |
-| :------------ | :--------------------- |
-| `11 Aug 2026` | Started Bash scripting |
-|               |                        |
-|               |                        |
-|               |                        |
 
 ---
 

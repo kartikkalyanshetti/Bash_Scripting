@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+whoami
+echo
+thing=`whoami`
+echo "$thing"
+echo
+
+echo $(whoami)
+echo
+echo "$(whoami)"
+echo
+echo "$(echo "$(whoami)")"
+
+
+
+

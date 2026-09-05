@@ -58,7 +58,15 @@ Along the way, I'm documenting:
                        │
                    🧩 Functions
                        │
+                 📦 Arrays
+                       │
                  🔗 Pipes & I/O
+                       │
+              🧮 Arithmetic
+                       │
+             🔄 Command Substitution
+                       │
+              🔀 Process Substitution
                        │
                 🔍 Text Processing
                        │
@@ -78,10 +86,15 @@ Along the way, I'm documenting:
 * [🔀 Conditions](#-conditions)
 * [🔁 Loops](#-loops)
 * [🧩 Functions](#-functions)
+* [📦 Arrays](#-arrays)
 * [🔗 Pipes & Redirection](#-pipes--redirection)
+* [🧮 Arithmetic Expressions](#-arithmetic-expressions)
+* [🔄 Command Substitution](#-command-substitution)
+* [🔀 Process Substitution](#-process-substitution)
 * [🔍 Text Processing](#-text-processing)
 * [🚦 Exit Status & Error Handling](#-exit-status--error-handling)
 * [🛠️ Debugging](#️-debugging)
+* [🔄 Bash Recap](#-bash-recap)
 * [📂 Repository Structure](#-repository-structure)
 * [🚀 Projects](#-projects)
 * [📈 Progress](#-progress)
@@ -324,6 +337,196 @@ greet "Kartik"
 
 ---
 
+# 📦 Arrays
+
+Bash supports two main types of arrays:
+
+* **Indexed arrays**
+* **Associative arrays**
+
+---
+
+## 🔢 Indexed Arrays
+
+Indexed arrays use numbers as indexes.
+
+```bash
+fruits=("apple" "banana" "mango")
+```
+
+Access individual elements:
+
+```bash
+echo "${fruits[0]}"
+echo "${fruits[1]}"
+```
+
+Output:
+
+```text
+apple
+banana
+```
+
+### Get all elements
+
+```bash
+echo "${fruits[@]}"
+```
+
+### Get number of elements
+
+```bash
+echo "${#fruits[@]}"
+```
+
+### Loop through an array
+
+```bash
+for fruit in "${fruits[@]}"; do
+    echo "$fruit"
+done
+```
+
+### Add an element
+
+```bash
+fruits+=("orange")
+```
+
+---
+
+## 🔑 Associative Arrays
+
+Associative arrays use **keys instead of numeric indexes**.
+
+```bash
+declare -A person
+
+person[name]="Kartik"
+person[age]="24"
+person[city]="Pune"
+```
+
+Access values using their keys:
+
+```bash
+echo "${person[name]}"
+echo "${person[city]}"
+```
+
+### Useful for finding unique values
+
+```bash
+declare -A unique
+
+for item in "${arguments[@]}"; do
+    unique[$item]=1
+done
+```
+
+If the same key appears again, it doesn't create another element.
+
+```text
+foo → 1
+foo → 1
+bar → 1
+```
+
+There are only **2 unique keys**:
+
+```text
+foo
+bar
+```
+
+### Get number of unique keys
+
+```bash
+echo "${#unique[@]}"
+```
+
+---
+
+## 🔢 Array Expansion
+
+```bash
+"${array[@]}"
+```
+
+Expands each element separately.
+
+```bash
+"${array[*]}"
+```
+
+Expands all elements as a single string.
+
+Example:
+
+```bash
+items=("apple" "banana" "mango")
+
+for item in "${items[@]}"; do
+    echo "$item"
+done
+```
+
+---
+
+# 🔤 IFS — Internal Field Separator
+
+`IFS` stands for **Internal Field Separator**.
+
+Bash uses it when splitting words and when joining array elements with `[*]`.
+
+The default value normally contains:
+
+```text
+space
+tab
+newline
+```
+
+### Example
+
+```bash
+items=("apple" "banana" "mango")
+
+IFS=,
+
+echo "${items[*]}"
+```
+
+Output:
+
+```text
+apple,banana,mango
+```
+
+Without changing `IFS`:
+
+```bash
+echo "${items[*]}"
+```
+
+Output:
+
+```text
+apple banana mango
+```
+
+### Remember
+
+```text
+"${array[@]}" → each element separately
+"${array[*]}" → elements joined using IFS
+```
+
+`IFS` is especially useful when controlling how Bash splits or joins data.
+
+---
+
 # 🔗 Pipes & Redirection
 
 One of the most important concepts in Linux.
@@ -345,6 +548,14 @@ command < file.txt
 command 2> error.txt
 command 2>&1
 ```
+
+### Input Redirection
+
+```bash
+command < file.txt
+```
+
+The file is connected to the command's **standard input**.
 
 ### Pipes
 
@@ -371,6 +582,260 @@ Command B
     │
     ▼
  stdout
+```
+
+---
+
+# 🧮 Arithmetic Expressions
+
+Bash can perform arithmetic using:
+
+```bash
+$(( expression ))
+```
+
+Example:
+
+```bash
+a=10
+b=5
+
+echo $((a + b))
+```
+
+Output:
+
+```text
+15
+```
+
+### Common operators
+
+```bash
++     # Addition
+-     # Subtraction
+*     # Multiplication
+/     # Division
+%     # Modulus
+**    # Exponentiation
+```
+
+### Arithmetic commands
+
+Bash also supports:
+
+```bash
+(( expression ))
+```
+
+Example:
+
+```bash
+(( a += 5 ))
+(( b *= 2 ))
+```
+
+### Bitwise operators
+
+```bash
+&     # AND
+|     # OR
+^     # XOR
+<<    # Left shift
+>>    # Right shift
+```
+
+Example:
+
+```bash
+b=10
+
+(( b >>= 1 ))
+
+echo "$b"
+```
+
+Output:
+
+```text
+5
+```
+
+### Integer variables
+
+`declare -i` tells Bash to treat a variable as an integer during assignments.
+
+```bash
+declare -i x
+
+x=10+20
+
+echo "$x"
+```
+
+Output:
+
+```text
+30
+```
+
+### Number bases
+
+Bash arithmetic supports different bases.
+
+A leading `0` can make Bash interpret a number as **octal (base 8)**:
+
+```bash
+d=010
+
+echo "$d"
+echo "$(( d ))"
+```
+
+Output:
+
+```text
+010
+8
+```
+
+To force decimal (base 10):
+
+```bash
+echo "$(( 10#$d ))"
+```
+
+Output:
+
+```text
+10
+```
+
+---
+
+# 🔄 Command Substitution
+
+Command substitution allows you to **run a command and use its output as a value**.
+
+The modern syntax is:
+
+```bash
+$(command)
+```
+
+Example:
+
+```bash
+current_dir=$(pwd)
+
+echo "$current_dir"
+```
+
+Here:
+
+```text
+pwd
+ ↓
+output
+ ↓
+$(pwd)
+ ↓
+current_dir
+```
+
+Another example:
+
+```bash
+files=$(ls)
+
+echo "$files"
+```
+
+### Why use it?
+
+It is useful when the output of one command needs to be used somewhere else.
+
+```bash
+today=$(date)
+
+echo "Today is: $today"
+```
+
+### Old syntax
+
+You may also see:
+
+```bash
+`command`
+```
+
+Example:
+
+```bash
+current_dir=`pwd`
+```
+
+But `$(command)` is preferred because it is easier to read and can be nested.
+
+---
+
+# 🔀 Process Substitution
+
+Process substitution lets you **use the output of a command as if it were a file**.
+
+Syntax:
+
+```bash
+<(command)
+```
+
+Example:
+
+```bash
+diff <(sort file1.txt) <(sort file2.txt)
+```
+
+Here, Bash runs both `sort` commands and gives `diff` something it can read like files.
+
+Conceptually:
+
+```text
+file1.txt → sort ──┐
+                   ├──→ diff
+file2.txt → sort ──┘
+```
+
+Another example:
+
+```bash
+while read -r line; do
+    echo "$line"
+done < <(ls)
+```
+
+The first `<` is **input redirection**.
+
+The second `<(ls)` is **process substitution**.
+
+```text
+ls
+ ↓
+<(ls)
+ ↓
+input to while loop
+```
+
+### Command Substitution vs Process Substitution
+
+```text
+$(command)
+     ↓
+Get the command's OUTPUT as a value
+
+
+<(command)
+     ↓
+Use the command's OUTPUT as a file-like input
 ```
 
 ---
@@ -459,7 +924,9 @@ bash -n script.sh
 bash -x script.sh
 ```
 
-## 🔀 `case` Statement
+---
+
+# 🔀 `case` Statement
 
 The `case` statement is used to match a value against multiple patterns.
 
@@ -519,7 +986,7 @@ case "$value" in
 esac
 ```
 
-If `$value` is `1`, the output is:
+If `$value` is `1`:
 
 ```text
 One
@@ -541,7 +1008,7 @@ case "$value" in
 esac
 ```
 
-If `$value` is `1`, both patterns match:
+If `$value` is `1`:
 
 ```text
 One
@@ -562,12 +1029,135 @@ One or Two
 
 > **`;;` stops, `;&` falls through, `;;&` keeps matching.**
 
+---
+
+# 🔄 Bash Recap
+
+This section is a quick review of the concepts I've learned so far.
+
+### Variables
+
+```bash
+name="Kartik"
+
+echo "$name"
+```
+
+### Arguments
+
+```bash
+"$@"
+"$1"
+"$2"
+"$#"
+```
+
+### Indexed Arrays
+
+```bash
+items=("one" "two" "three")
+
+echo "${items[0]}"
+echo "${#items[@]}"
+```
+
+### Associative Arrays
+
+```bash
+declare -A unique
+
+unique[apple]=1
+unique[banana]=1
+```
+
+### IFS
+
+```bash
+IFS=,
+
+echo "${items[*]}"
+```
+
+### Arithmetic
+
+```bash
+(( x += 10 ))
+
+echo "$((x * 2))"
+```
+
+### Command Substitution
+
+```bash
+result=$(command)
+```
+
+### Process Substitution
+
+```bash
+diff <(command1) <(command2)
+```
+
+### Input / Output
+
+```bash
+command < input.txt
+command > output.txt
+command 2> error.txt
+command | another-command
+```
+
+### Functions
+
+```bash
+function_name() {
+    local value="$1"
+    echo "$value"
+}
+```
+
+### `case`
+
+```bash
+case "$value" in
+    pattern)
+        command
+        ;;
+esac
+```
+
+---
+
+## 🧠 What I'm Practicing
+
+Instead of only reading about a feature, I try to:
+
+```text
+Learn
+  ↓
+Write
+  ↓
+Run
+  ↓
+Experiment
+  ↓
+Break
+  ↓
+Understand the error
+  ↓
+Fix
+  ↓
+Document
+```
+
+---
+
 # 📈 Progress
 
 ### Course Progress
 
 ```text
-[████░░░░░░░░░░░░░░░░] 20%
+[████████░░░░░░░░░░░░] 40%
 ```
 
 ## 📈 Learning Log
@@ -576,44 +1166,50 @@ One or Two
 | :------------ | :-------------------------------- |
 | `11 Aug 2026` | Started Bash scripting            |
 | `13 Aug 2026` | Learned `case` statements in Bash |
-|               |                                   |
-|               |                                   |
+| `05 Sep 2026` | Learned indexed arrays            |
+| `05 Sep 2026` | Learned associative arrays        |
+| `05 Sep 2026` | Learned `IFS`                     |
+| `05 Sep 2026` | Learned arithmetic expressions    |
+| `05 Sep 2026` | Learned command substitution      |
+| `05 Sep 2026` | Learned process substitution      |
 
 ---
 
 ## 🧠 Concepts I'm Building
 
-| Concept             | Status |
-| :------------------ | :----: |
-| Shell & Terminal    |    ✅   |
-| Linux Commands      |    ✅   |
-| Files & Directories |    ✅   |
-| Globbing            |   🟡   |
-| Variables           |   🟡   |
-| User Input          |   🟡   |
-| Arguments           |   🟡   |
-| Conditions          |   🟡   |
-| `case` Statement    |    ✅   |
-| Loops               |   🟡   |
-| Functions           |    ⬜   |
-| Arrays              |    ⬜   |
-| Pipes               |   🟡   |
-| Redirection         |   🟡   |
-| Text Processing     |    ⬜   |
-| Exit Status         |    ⬜   |
-| Error Handling      |    ⬜   |
-| Processes           |    ⬜   |
-| Signals             |    ⬜   |
-| Subshells           |    ⬜   |
-| Advanced Bash       |    ⬜   |
+| Concept                | Status |
+| :--------------------- | :----: |
+| Shell & Terminal       |    ✅   |
+| Linux Commands         |    ✅   |
+| Files & Directories    |    ✅   |
+| Globbing               |   🟡   |
+| Variables              |   🟡   |
+| User Input             |   🟡   |
+| Arguments              |   🟡   |
+| Conditions             |   🟡   |
+| `case` Statement       |    ✅   |
+| Loops                  |   🟡   |
+| Functions              |   🟡   |
+| Indexed Arrays         |    ✅   |
+| Associative Arrays     |    ✅   |
+| `IFS`                  |    ✅   |
+| Pipes                  |   🟡   |
+| Redirection            |   🟡   |
+| Arithmetic Expressions |    ✅   |
+| Command Substitution   |    ✅   |
+| Process Substitution   |    ✅   |
+| Text Processing        |    ⬜   |
+| Exit Status            |    ⬜   |
+| Error Handling         |    ⬜   |
+| Processes              |    ⬜   |
+| Signals                |    ⬜   |
+| Subshells              |    ⬜   |
+| Advanced Bash          |    ⬜   |
 
 ---
+
 **Legend:**
 `✅ Completed` · `🟡 Learning` · `⬜ Not Started`
-
----
-
-
 
 ---
 

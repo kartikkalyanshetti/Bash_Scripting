@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+thing=$(( 2+2 ))
+echo "thing is $thing" 
+
+a=2
+b=3
+
+echo "Sum of a & b : $(( $a+$b ))"
+
+echo "Sum of previous two : $(( a+b+thing )) " #Here as previously written i havent used $ for variables.Because the arithmetic expression remembers the variables. 
+
+#SOmething thats funny over there is if we give varibles are non integers
+
+c=Hello
+d=Goodbye
+
+echo $(( c+d )) #We hope to see HelloGoodbye , but it doesnt work that way
+
+#It gives o/p as 0
+
+# There is another way to do arithmetic expressions 
+
+x=20
+y=30
+
+(( z= x + y ))
+
+echo "z=$z"
+

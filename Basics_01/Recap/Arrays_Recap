@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+# Take the arguments and put them into an indexed array
+process-indexed() {
+
+        local arguments=("$@")
+
+        # Count how many arguments we received
+        echo "Found ${#arguments[@]} arguments"
+
+        # Use comma instead of space when joining the array
+        local IFS=,
+
+        # Print all the arguments separated by commas
+        echo "${arguments[*]}"
+}
+
+
+# Use an associative array to find unique arguments
+process-associative() {
+
+        # Store all the arguments in an array
+        local arguments=("$@")
+
+        # Print the total number of arguments
+        echo "Found ${#arguments[@]} arguments"
+
+        # Create an associative array
+        # The argument itself will be used as the key
+        declare -A unique
+
+        local item
+
+        # Go through each argument
+        for item in "${arguments[@]}"; do
+
+                # Add the argument as a key
+                # If it already exists, it won't create a duplicate
+                unique[$item]=1
+        done
+
+        # Number of keys = number of unique arguments
+        echo "Found ${#unique[@]} unique arguments"
+}
+
+
+# Take arguments and run them as commands
+process-commands() {
+
+        # Store all arguments in an array
+        local arguments=("$@")
+
+        # Count the arguments
+        echo "Found ${#arguments[@]} arguments"
+
+        local item
+
+        # Go through each argument one by one
+        for item; do
+
+                # Show which command is going to run
+                echo "running command: $item"
+
+                # Run the command stored in $item
+                # Example: if item="ls", this runs ls
+                "$item"
+        done
+}
+
+
+# The first argument tells us what we want to do
+# Example: ./Arrays_Recap indexed foo bar
+# Here, cmd will be "indexed"
+cmd=$1
+
+# Remove the first argument
+# Now "$@" contains only the arguments after "indexed"
+shift
+
+
+# Decide which function to call
+case "$cmd" in
+
+        # Work with the arguments as an indexed array
+        indexed)
+                process-indexed "$@" ;;
+
+        # Find unique arguments using an associative array
+        associative)
+                process-associative "$@" ;;
+
+        # Treat the arguments as commands and run them
+        commands)
+                process-commands "$@" ;;
+
+esac
+
+

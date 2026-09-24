@@ -1,0 +1,72 @@
+# 🔗 Bash PIPESTATUS
+
+`PIPESTATUS` is a Bash array that stores the **exit status of each command** in the most recently executed pipeline.
+
+## Syntax
+
+PIPESTATUS
+
+Each pipeline command gets its own status:
+
+command1 | command2 | command3
+
+echo "${PIPESTATUS[@]}"
+
+## Example
+
+false | true | false
+
+echo "${PIPESTATUS[@]}"
+
+Output:
+
+1 0 1
+
+Meaning:
+
+false -> 1  (failed)
+true  -> 0  (success)
+false -> 1  (failed)
+
+## Why PIPESTATUS?
+
+Normally:
+
+false | true
+
+echo $?
+
+Output:
+
+0
+
+`$?` gives the status of the **last command** (`true`).
+
+But:
+
+false | true
+
+echo "${PIPESTATUS[@]}"
+
+Output:
+
+1 0
+
+So `PIPESTATUS` lets us check **every command in the pipeline**.
+
+## Important
+
+Read `PIPESTATUS` immediately after the pipeline:
+
+false | true
+echo "${PIPESTATUS[@]}"
+
+Do not run another command first, because `PIPESTATUS` gets updated by subsequent commands.
+
+## Quick Memory
+
+$?            -> status of last command
+PIPESTATUS    -> status of every command in pipeline
+0             -> success
+non-zero      -> failure
+

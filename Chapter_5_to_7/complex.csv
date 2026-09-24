@@ -1,0 +1,12 @@
+ID,Name,Email,Address,Skills,Salary,Active,Notes
+1,Aarav Sharma,aarav@example.com,"12, MG Road, Pune",Python; Bash; Linux,55000.5,TRUE,"Works in ""DevOps"" team"
+2,Priya Patel,priya@example.com,"45 Park Street, Mumbai",Java; SQL; AWS,62000,FALSE,"On leave, returns Monday"
+3,Rahul Kumar,rahul@example.com,"8 Tech Park, Bengaluru",C++; Docker; Git,58000.75,TRUE,"Experienced
+in networking"
+4,Sneha Singh,sneha@example.com,"21 Connaught Place, Delhi",HTML; CSS; JavaScript,50000,TRUE,Frontend developer
+5,Vikram Rao,vikram@example.com,"77 Marina Beach Road, Chennai",Azure; Kubernetes; Terraform,70000,TRUE,Senior engineer
+6,Ananya Das,ananya@example.com,"14 Banjara Hills, Hyderabad",Python; AWS; MQTT,65000.25,FALSE,Project: MITRA
+7,Rohan Gupta,rohan@example.com,"33 Salt Lake, Kolkata",Linux; Bash; Ansible,59000,TRUE,Remote employee
+8,Meera Joshi,meera@example.com,"9 Pink City Road, Jaipur",SQL; Power BI; Excel,48000,TRUE,Data analyst
+9,Karan Mehta,karan@example.com,"101 CG Road, Ahmedabad",Go; Docker; CI/CD,68000,FALSE,Notice period: 30 days
+10,Isha Nair,isha@example.com,"56 Koregaon Park, Pune",React; Node.js; MongoDB,60000,TRUE,Full-stack developer

@@ -1,0 +1,143 @@
+# sed Command
+
+`sed` stands for **Stream Editor**.
+
+It is used to search, replace, delete, insert, and modify text.
+
+## Syntax
+
+sed [OPTION] 'COMMAND' FILE
+
+---
+
+## 1. Print Lines
+
+Given:
+
+Kartik,23,Pune
+Rahul,25,Mumbai
+Amit,22,Delhi
+
+Print the file using `sed`:
+
+sed -n 'p' normal.csv
+
+`-n` suppresses normal output.
+
+`p` means print.
+
+
+## 2. Print Specific Lines
+
+Print line 2:
+
+sed -n '2p' normal.csv
+
+Print lines 2 to 3:
+
+sed -n '2,3p' normal.csv
+
+---
+
+## 3. Search and Replace
+
+Replace `Pune` with `Mumbai`:
+
+sed 's/Pune/Mumbai/' normal.csv
+
+`s` means substitute.
+
+The structure is:
+
+s / OLD / NEW /
+
+Example:
+
+sed 's/old/new/' file.txt
+
+---
+
+## 4. Replace All Occurrences
+
+By default, `sed` replaces only the first match
+on each line.
+
+Use `g` for all matches:
+
+sed 's/Linux/linux/g' file.txt
+
+Example:
+
+echo "Linux Linux Linux" | sed 's/Linux/linux/g'
+
+Output:
+
+linux linux linux
+
+---
+
+## 5. Delete Lines
+
+Delete line 2:
+
+sed '2d' file.txt
+
+Delete lines 2 to 4:
+
+sed '2,4d' file.txt
+
+Delete empty lines:
+
+sed '/^$/d' file.txt
+
+---
+
+## 6. Edit the File Directly
+
+Normally `sed` prints the modified content without
+changing the original file.
+
+Use `-i` to modify the file:
+
+sed -i 's/Pune/Mumbai/' normal.csv
+
+`-i` means **in-place editing.
+
+Be careful when using `-i` because the original content
+is modified.
+
+---
+
+## Common Commands
+
+```text
+s/old/new/       Replace first match
+s/old/new/g      Replace all matches
+2p               Print line 2
+2,4p             Print lines 2-4
+2d               Delete line 2
+2,4d             Delete lines 2-4
+/^$/d            Delete empty lines
+-i               Edit file in-place
+```
+
+---
+
+## Key Takeaway
+
+sed
+ |
+ +-- Search / Replace
+ |     sed 's/old/new/'
+ |
+ +-- Delete
+ |     sed '2d'
+ |
+ +-- Print
+ |     sed -n '2p'
+ |
+ +-- In-place Edit
+       sed -i 's/old/new/'
+
+`sed` is mainly used when you want to **modify or extract text line-by-line.
+

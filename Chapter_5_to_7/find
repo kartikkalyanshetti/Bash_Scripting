@@ -1,0 +1,212 @@
+# find Command
+
+`find` is used to **search for files and directories** based on conditions such as name, type, size, permissions, and time.
+
+## Syntax
+
+find [PATH] [OPTIONS] [EXPRESSION]
+
+---
+
+## 1. Find a File by Name
+
+Suppose the current directory contains:
+
+Shell_Scripting/
+├── normal.csv
+├── complex.csv
+├── script.sh
+└── README.md
+
+Find `normal.csv`:
+
+find . -name "normal.csv"
+
+Output:
+
+./normal.csv
+
+Here:
+
+.             -> Search from current directory
+-name         -> Search by name
+"normal.csv"  -> Name to search for
+
+---
+
+## 2. Find All `.sh` Files
+
+find . -name "*.sh"
+
+This searches the current directory and all
+subdirectories for files ending in `.sh`.
+
+---
+
+## 3. Find Only Files
+
+Use `-type f`:
+
+find . -type f -name "*.sh"
+
+Meaning:
+
+-type f  -> Regular files
+-name    -> Match the filename
+
+---
+
+## 4. Find Only Directories
+
+Use `-type d`:
+
+find . -type d -name "Shell_Scripting"
+
+Meaning:
+
+-type d  -> Directories
+
+---
+
+## 5. Case-Insensitive Search
+
+Use `-iname` instead of `-name`:
+
+find . -iname "README.md"
+
+This can match:
+
+README.md
+readme.md
+Readme.md
+
+---
+
+## 6. Find by Size
+
+Find files larger than 10 MB:
+
+find . -type f -size +10M
+
+Find files smaller than 1 MB:
+
+find . -type f -size -1M
+
+---
+
+## 7. Find and Execute a Command
+
+`find` can perform an action on the files it finds.
+
+For example, list detailed information:
+
+find . -type f -name "*.sh" -exec ls -l {} \;
+
+Here:
+
+-exec       -> Execute a command
+{}          -> Current file found by find
+\;          -> End of the command
+
+So:
+
+find . -type f -name "*.sh" -exec ls -l {} \;
+
+means:
+
+> Find all `.sh` files and run `ls -l` on each one.
+
+---
+
+## 8. Find Empty Files
+
+find . -type f -empty
+
+Find empty directories:
+
+find . -type d -empty
+
+---
+
+## 9. Find by Modification Time
+
+Find files modified within the last 1 day:
+
+find . -type f -mtime -1
+
+Find files modified more than 7 days ago:
+
+find . -type f -mtime +7
+
+-mtime -1  -> Modified less than 1 day ago
+-mtime +7  -> Modified more than 7 days ago
+
+---
+
+## Common Options
+
+-name "file"       Search by name
+-iname "file"      Case-insensitive name search
+-type f            Regular files
+-type d            Directories
+-size +10M         Larger than 10 MB
+-empty             Empty files/directories
+-mtime -1          Modified within 1 day
+-exec              Execute a command
+
+---
+
+## Useful Patterns
+
+Find a file:
+
+find . -name "file.txt"
+
+Find all Bash scripts:
+
+find . -type f -name "*.sh"
+
+Find directories:
+
+find . -type d
+
+Find large files:
+
+find . -type f -size +100M
+
+Find and execute:
+
+find . -type f -name "*.sh" -exec ls -l {} \;
+
+---
+
+## Key Takeaway
+
+find
+ |
+ +-- Where?
+ |     .
+ |
+ +-- What?
+ |     -name "*.sh"
+ |
+ +-- What type?
+ |     -type f
+ |
+ +-- How big?
+ |     -size +10M
+ |
+ +-- What action?
+       -exec command {} \;
+
+A very useful pattern to remember:
+
+find PATH -type f -name "PATTERN"
+
+Example:
+
+find . -type f -name "*.sh"
+
+> `find` searches the filesystem. It can search recursively and
+> can perform actions on the files it finds.
+

@@ -1,0 +1,153 @@
+# awk Command
+
+`awk` is a text-processing language commonly used for - searching, filtering, extracting fields, and processing structured text.
+
+It is especially useful for column-based data.
+
+## Syntax
+
+awk 'PATTERN { ACTION }' FILE
+
+---
+
+## 1. Print Columns
+
+Given:
+
+name,age,city
+Kartik,23,Pune
+Rahul,25,Mumbai
+Amit,22,Delhi
+
+Use `-F` to specify the delimiter:
+
+awk -F ',' '{print $1}' normal.csv
+
+Output:
+
+name
+Kartik
+Rahul
+Amit
+
+`-F ','` means comma is the field separator.
+
+Fields are represented as:
+
+$1    Field 1
+$2    Field 2
+$3    Field 3
+
+---
+
+## 2. Print Multiple Fields
+
+Print name and city:
+
+awk -F ',' '{print $1, $3}' normal.csv
+
+Output:
+
+name city
+Kartik Pune
+Rahul Mumbai
+Amit Delhi
+
+---
+
+## 3. Filter Rows
+
+Print people whose age is greater than 23:
+
+awk -F ',' '$2 > 23 {print $1, $2}' normal.csv
+
+Output:
+
+Rahul 25
+
+The pattern:
+
+$2 > 23
+
+selects matching rows.
+
+---
+
+## 4. Built-in Variables
+
+Useful `awk` variables:
+
+$0    Entire line
+$1    Field 1
+$2    Field 2
+$3    Field 3
+NF    Number of fields
+NR    Current line number
+
+Print line number with each line:
+
+awk '{print NR, $0}' file.txt
+
+---
+
+## 5. Conditions
+
+Example:
+
+awk -F ',' '$2 >= 23 {print $1}' normal.csv
+
+This prints the first field when field 2 is
+greater than or equal to 23.
+
+---
+
+## 6. BEGIN and END
+
+`BEGIN` runs before processing the file.
+
+`END` runs after processing the file.
+
+Example:
+
+awk -F ',' 'BEGIN {print "Names"} {print $1} END {print "Done"}' normal.csv
+
+---
+
+## Common Patterns
+
+Print a field:
+
+awk -F ',' '{print $1}' file.csv
+
+Print multiple fields:
+
+awk -F ',' '{print $1, $3}' file.csv
+
+Filter:
+
+awk -F ',' '$2 > 20 {print $1}' file.csv
+
+Print line numbers:
+
+awk '{print NR, $0}' file.txt
+
+---
+
+## Key Takeaway
+
+awk
+ |
+ +-- Extract fields
+ |     awk -F ',' '{print $1}'
+ |
+ +-- Filter
+ |     awk '$2 > 20'
+ |
+ +-- Print
+ |     awk '{print $1, $3}'
+ |
+ +-- Process data
+       BEGIN / ACTION / END
+
+`awk` is especially useful when you need to **work with columns, conditions, calculations, and structured text.
+

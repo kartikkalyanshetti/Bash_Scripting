@@ -1,0 +1,138 @@
+# `cut` Command
+
+The `cut` command is used to **extract specific characters, bytes, or fields from each line of text**.
+
+## Basic Syntax
+
+```bash
+cut [OPTION] [FILE]
+```
+
+---
+
+##  Example with CSV Files
+
+### `normal.csv`
+
+```text
+name,age,city,department
+Kartik,23,Pune,DevOps
+Rahul,25,Mumbai,Backend
+Amit,22,Delhi,Testing
+Sneha,24,Bangalore,Cloud
+```
+
+To extract the **city** column:
+
+```bash
+cut -d ',' -f 3 normal.csv
+```
+
+Output:
+
+```text
+city
+Pune
+Mumbai
+Delhi
+Bangalore
+```
+
+### Breaking down the command
+
+```text
+cut -d ',' -f 3 normal.csv
+    │       │
+    │       └── Select field 3
+    │
+    └────────── Use comma as delimiter
+```
+
+---
+
+## `cut` and Complex CSV
+
+Consider:
+
+```text
+101,"Kartik Kalyanshetti","Pune, Maharashtra",DevOps,85000
+```
+
+Running:
+
+```bash
+cut -d ',' -f 3 complex.csv
+```
+
+does **not** correctly extract:
+
+```text
+Pune, Maharashtra
+```
+
+because `cut` treats **every comma as a delimiter**, including the comma inside:
+
+```text
+"Pune, Maharashtra"
+```
+
+### Important
+
+> `cut` works well with simple delimiter-separated text, but it is **not a complete CSV parser**.
+
+For complex CSV files containing quoted fields and delimiters inside those fields, use tools such as `awk`, Python's `csv` module, or a dedicated CSV parser.
+
+---
+
+## Common Options
+
+| Option | Purpose                              |
+| ------ | ------------------------------------ |
+| `-c`   | Extract characters                   |
+| `-b`   | Extract bytes                        |
+| `-d`   | Specify delimiter                    |
+| `-f`   | Select fields                        |
+| `-s`   | Suppress lines without the delimiter |
+
+## Most important pattern
+
+```bash
+cut -d 'DELIMITER' -f FIELD_NUMBER file
+```
+
+Example:
+
+```bash
+cut -d ':' -f 1 /etc/passwd
+```
+
+This means:
+
+> Use `:` as the delimiter and extract field `1`.
+
+---
+
+## Key Takeaway
+
+```text
+cut → simple text extraction
+     ↓
+-d  → delimiter
+-f  → field
+-c  → character
+```
+
+For simple CSV:
+
+```bash
+cut -d ',' -f 3 normal.csv
+```
+
+For complex CSV:
+
+```bash
+cut -d ',' -f 3 complex.csv
+```
+
+May produce incorrect results when fields contain commas inside quotes.
+

@@ -1,0 +1,197 @@
+# grep Command
+
+`grep` is used to **search for matching text** in files or command output.
+
+The name comes from:
+
+Global Regular Expression Print
+
+## Syntax
+
+grep [OPTION] PATTERN FILE
+
+---
+
+## 1. Basic Search
+
+Given:
+
+Kartik DevOps
+Rahul Backend
+Amit Testing
+Sneha DevOps
+
+Search for `DevOps`:
+
+grep "DevOps" file.txt
+
+Output:
+
+Kartik DevOps
+Sneha DevOps
+
+---
+
+## 2. Case-Insensitive Search
+
+Use `-i`:
+
+grep -i "devops" file.txt
+
+This matches:
+
+DevOps
+devops
+DEVOPS
+DeVoPs
+
+---
+
+## 3. Show Line Numbers
+
+Use `-n`:
+
+grep -n "DevOps" file.txt
+
+Output:
+
+1:Kartik DevOps
+4:Sneha DevOps
+
+---
+
+## 4. Invert the Match
+
+Use `-v` to show lines that do NOT match.
+
+grep -v "DevOps" file.txt
+
+Output:
+
+Rahul Backend
+Amit Testing
+
+---
+
+## 5. Count Matches
+
+Use `-c`:
+
+grep -c "DevOps" file.txt
+
+Output:
+
+2
+
+---
+
+## 6. Search Recursively
+
+Use `-r`:
+
+grep -r "TODO" .
+
+This searches for `TODO` inside files under the
+current directory.
+
+---
+
+## 7. Match Whole Words
+
+Use `-w`:
+
+grep -w "cat" file.txt
+
+This matches:
+
+cat
+
+but not:
+
+catalog
+copycat
+
+---
+
+## 8. Use Regular Expressions
+
+`grep` can search using regular expressions.
+
+Find lines starting with `K`:
+
+grep '^K' file.txt
+
+Find lines ending with `DevOps`:
+
+grep 'DevOps$' file.txt
+
+Here:
+
+^    Start of line
+$    End of line
+
+---
+
+## 9. grep With Pipes
+
+`grep` is commonly used in pipelines.
+
+For example:
+
+ps aux | grep nginx
+
+This searches the output of `ps aux` for `nginx`.
+
+Another example:
+
+cat normal.csv | grep "DevOps"
+
+However, when possible, directly give the file:
+
+grep "DevOps" normal.csv
+
+---
+
+## Common Options
+
+-i    Ignore case
+-n    Show line numbers
+-v    Invert match
+-c    Count matches
+-r    Recursive search
+-w    Match whole words
+-E    Extended regular expressions
+-o    Print only matching part
+
+---
+
+## Key Takeaway
+
+grep
+ |
+ +-- Search
+ |     grep "pattern" file
+ |
+ +-- Ignore case
+ |     grep -i "pattern" file
+ |
+ +-- Line numbers
+ |     grep -n "pattern" file
+ |
+ +-- Invert
+ |     grep -v "pattern" file
+ |
+ +-- Count
+ |     grep -c "pattern" file
+ |
+ +-- Recursive
+       grep -r "pattern" directory
+
+`grep` is mainly used to **find and filter text**.
+
+A simple way to remember the three commands:
+
+grep  -> Find
+sed   -> Modify
+awk   -> Process
+

@@ -1,0 +1,199 @@
+BASH PARAMETER EXPANSION
+1. What is Parameter Expansion?
+
+Parameter expansion allows Bash to access, manipulate, replace, and extract variable values using ${...} syntax.
+
+It is useful in DevOps for:
+
+Setting default environment variables
+Validating configuration
+Processing filenames and paths
+Modifying strings
+Writing deployment and automation scripts
+
+2. Basic Parameter Expansion
+
+name="Kartik"
+
+echo "$name"
+echo "${name}"
+
+Output:
+
+Kartik
+Kartik
+
+Braces help separate variable names from surrounding text.
+
+app="myapp"
+echo "${app}_logs"
+
+Output: myapp_logs
+
+3. Default Values
+${VAR:-default}
+
+Uses the default when the variable is unset or empty. Does not assign the default to the variable.
+
+unset PORT
+echo "${PORT:-8080}"
+
+Output: 8080
+
+${VAR-default}
+
+Uses the default only when the variable is unset.
+
+${VAR:=default}
+
+Uses and assigns the default when the variable is unset or empty.
+
+unset PORT
+echo "${PORT:=8080}"
+echo "$PORT"
+
+Output:
+
+8080
+8080
+${VAR=default}
+
+Assigns the default only when the variable is unset.
+
+4. Required Variables and Validation
+${VAR:?message}
+
+Prints an error if the variable is unset or empty. In a non-interactive Bash script, this generally terminates the shell.
+
+: "${VERSION:?Please provide VERSION}"
+echo "Version: $VERSION"
+
+Run:
+
+VERSION=1.2.0 bash deploy.sh
+
+Useful for checking required deployment configuration.
+
+${VAR?message}
+
+Prints an error only if the variable is unset, not if it is empty.
+
+5. String Length
+${#VAR}
+
+Returns the length of a variable's value.
+
+name="Kartik"
+echo "${#name}"
+
+Output: 6
+
+6. Remove Prefixes and Suffixes
+
+These expansions use shell patterns, not regular expressions.
+
+${VAR#pattern} — Remove shortest matching prefix
+path="/var/log/nginx/access.log"
+echo "${path#*/}"
+
+Output: var/log/nginx/access.log
+
+${VAR##pattern} — Remove longest matching prefix
+path="/var/log/nginx/access.log"
+echo "${path##*/}"
+
+Output: access.log
+
+${VAR%pattern} — Remove shortest matching suffix
+file="backup.tar.gz"
+echo "${file%.*}"
+
+Output: backup.tar
+
+${VAR%%pattern} — Remove longest matching suffix
+file="backup.tar.gz"
+echo "${file%%.*}"
+
+Output: backup
+
+Extract a file extension
+file="backup.tar.gz"
+echo "${file##*.}"
+
+Output: gz
+
+7. String Replacement
+${VAR/pattern/replacement} — Replace first match
+name="banana"
+echo "${name/a/o}"
+
+Output: bonana
+
+${VAR//pattern/replacement} — Replace all matches
+name="banana"
+echo "${name//a/o}"
+
+Output: bonono
+
+8. Substring Extraction
+${VAR:offset}
+
+Extracts a string from the specified offset to the end.
+
+${VAR:offset:length}
+
+Extracts a substring with a specified length. Offsets start at zero.
+
+text="DevOps"
+
+echo "${text:0:3}"
+echo "${text:3}"
+
+Output:
+
+Dev
+Ops
+9. Case Conversion
+
+These forms are supported by Bash.
+
+name="kartik"
+
+echo "${name^}"     # Kartik
+echo "${name^^}"    # KARTIK
+echo "${name,}"     # kartik
+echo "${name,,}"    # kartik
+
+For a clearer lowercase example:
+
+name="KARTIK"
+echo "${name,}"     # kARTIK
+echo "${name,,}"    # kartik
+${VAR^} — Uppercase the first character.
+${VAR^^} — Uppercase all characters.
+${VAR,} — Lowercase the first character.
+${VAR,,} — Lowercase all characters.
+
+10. Quick Reference
+Syntax		Purpose
+${VAR:-default}	Default if unset or empty
+${VAR-default}	Default only if unset
+${VAR:=default}	Assign default if unset or empty
+${VAR=default}	Assign default only if unset
+${VAR:?message}	Error if unset or empty
+${#VAR}		Get string length
+${VAR#pattern}	Remove shortest matching prefix
+${VAR##pattern}	Remove longest matching prefix
+${VAR%pattern}	Remove shortest matching suffix
+${VAR%%pattern}	Remove longest matching suffix
+${VAR/old/new}	Replace first match
+${VAR//old/new}	Replace all matches
+${VAR:0:5}	Extract first five characters
+${VAR^^}	Uppercase all characters
+${VAR,,}	Lowercase all characters
+
+# Important Notes
+* Prefer quoting variables as "$VAR" or "${VAR}" to prevent unintended word splitting and pathname expansion.
+* Use ${VAR:-default} when you need a fallback without modifying the variable.
+* Use ${VAR:=default} when you want to assign the fallback as well.
+* Parameter expansion is built into Bash and often avoids external commands such as cut, sed, and awk for simple string manipulation.

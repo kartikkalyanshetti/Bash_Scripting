@@ -1,0 +1,193 @@
+BASH GLOBBING — RECAP
+======================
+
+What is globbing?
+-----------------
+Globbing is shell pattern matching. Bash expands wildcard patterns into matching
+filenames or pathnames before the command runs.
+
+Example:
+    ls *.txt
+
+If the current directory contains notes.txt and recap.txt, Bash expands *.txt
+into:
+    ls notes.txt recap.txt
+
+Important: Globbing is performed by the shell, not usually by ls itself.
+
+COMMON GLOB PATTERNS
+--------------------
+
+1. *  — matches zero or more characters
+    ls *.log          # All names ending in .log
+    ls report*        # Names beginning with "report"
+    ls *backup*       # Names containing "backup"
+
+    Note: * does not match a leading dot in Bash by default.
+    Example: *.conf usually will not match .myconfig.
+
+2. ?  — matches exactly one character
+    ls file?.txt      # file1.txt, fileA.txt; not file10.txt
+
+3. [abc] — matches one character from a set
+    ls file[123].txt  # file1.txt, file2.txt, file3.txt
+
+4. [a-z] — matches one character in a range
+    ls chapter[1-5].md
+    ls [A-Z]*         # Names beginning with an uppercase letter
+    # Range behavior can depend on the current locale.
+
+5. [!abc] or [^abc] — matches one character NOT in the set
+    ls file[!0-9].txt # A character other than a digit in that position
+
+6. {a,b} — brace expansion, not technically globbing
+    echo {dev,test,prod}
+    # Prints: dev test prod
+
+    touch report.{txt,md}
+    # Creates report.txt and report.md
+
+    Brace expansion happens before pathname expansion and can generate
+    strings even when no matching files exist.
+
+GLOBBING VS REGULAR EXPRESSIONS
+-------------------------------
+Globs and regular expressions are different pattern languages.
+
+    *.log       # Glob: names ending in .log
+    .*\.log$    # Regex-style pattern (not a Bash glob)
+
+In a glob, * means any number of characters. In a regular expression, *
+usually repeats the preceding token.
+
+WHEN A PATTERN DOES NOT MATCH
+-----------------------------
+By default, if a glob matches no files, Bash usually leaves the pattern
+unchanged.
+
+    echo *.doesnotexist
+    # Often prints the literal text: *.doesnotexist
+
+Useful Bash options:
+    shopt -s nullglob
+    # An unmatched glob expands to nothing.
+
+    shopt -s failglob
+    # An unmatched glob causes a shell error.
+
+    shopt -s dotglob
+    # Includes dotfiles in * (except . and ..).
+
+Check current options:
+    shopt nullglob failglob dotglob
+
+Turn an option off:
+    shopt -u nullglob
+
+QUOTING: PREVENT ACCIDENTAL GLOBBING
+------------------------------------
+Unquoted wildcard characters can be expanded by Bash.
+
+    pattern='*.log'
+    printf '%s\n' $pattern
+    # The unquoted variable expansion may glob matching filenames.
+
+    printf '%s\n' "$pattern"
+    # Prints the literal string *.log
+
+Single quotes and double quotes also prevent glob characters typed inside
+the quotes from being treated as pathname patterns:
+    echo "*.txt"
+    echo '*.txt'
+
+To match a literal wildcard in a filename, quote or escape it:
+    ls 'file*.txt'
+    ls file\\*.txt
+
+GLOBBING WITH COMMANDS
+----------------------
+The shell expands the pattern before passing arguments to the command.
+
+    rm -- *.tmp
+    # Removes matching .tmp files in the current directory.
+    # Be careful: inspect matches before using destructive commands.
+
+Safer preview:
+    printf '%s\n' *.tmp
+
+Find files recursively? A normal * does not cross directory separators.
+For recursive matching in Bash, enable globstar:
+    shopt -s globstar
+    printf '%s\n' **/*.log
+
+With globstar enabled, ** can match files in nested directories.
+Behavior for hidden files depends on dotglob and other shell settings.
+
+GLOBBING VS find
+----------------
+Globbing is convenient for matching names in a directory:
+    ls *.sh
+
+Use find for recursive searches and conditions such as age, size, or type:
+    find . -type f -name '*.sh'
+    find . -type f -mtime -7
+
+Notice the quotes around '*.sh'. They stop Bash from expanding the pattern
+before find receives it. find applies its own pattern matching.
+
+COMMON DEVOPS USE CASES
+-----------------------
+    cp *.yaml backup/
+    # Copy YAML files in the current directory.
+
+    for file in *.log; do
+        [ -e "$file" ] || continue
+        printf 'Processing: %s\n' "$file"
+    done
+    # The existence check helps handle an unmatched pattern when nullglob
+    # is not enabled.
+
+    rm -- *.tmp
+    # Clean temporary files; inspect the list first.
+
+    find /var/log -type f -name '*.log'
+    # Recursively find log files.
+
+PRACTICAL RULES
+---------------
+1. * = zero or more characters; ? = exactly one character.
+2. [abc] matches one character from a set; [a-z] matches a range.
+3. Bash expands unquoted globs before running the command.
+4. Quote patterns when another command (such as find) must receive the
+   pattern literally.
+5. By default, * does not match filenames beginning with a dot.
+6. Brace expansion ({a,b}) is related but is not globbing.
+7. Preview wildcard matches before running commands that delete or overwrite.
+8. For scripts, consider unmatched-glob behavior and quote variable expansions.
+
+QUICK PRACTICE
+--------------
+Assume these files exist:
+    app.log
+    app1.log
+    app10.log
+    notes.txt
+    .secret
+
+What does each pattern match?
+    *.log
+    app?.log
+    app[0-9].log
+    *.*
+    .* 
+
+Answers:
+    *.log        -> app.log app1.log app10.log
+    app?.log     -> app1.log
+    app[0-9].log -> app1.log
+    *.*          -> app.log app1.log app10.log notes.txt
+                   (does not include .secret by default)
+    .*           -> hidden names beginning with a dot; be careful with
+                   patterns that may include . and .. in some contexts.
+
+END OF RECAP

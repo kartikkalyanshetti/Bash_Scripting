@@ -1,0 +1,208 @@
+BASH GLOB SHELL OPTIONS — RECAP
+================================
+
+WHAT ARE GLOB-RELATED SHELL OPTIONS?
+------------------------------------
+Bash provides shell options that change how filename patterns (globs) behave.
+Most are managed with `shopt`.
+
+    shopt                 # List shell options and their states
+    shopt -p              # Print settings in reusable shell syntax
+    shopt -s OPTION       # Enable an option
+    shopt -u OPTION       # Disable an option
+    shopt OPTION          # Check one option
+
+1. nullglob
+------------
+Default: OFF
+
+An unmatched glob expands to nothing instead of remaining as a literal pattern.
+
+    shopt -s nullglob
+    files=( *.log )
+    printf 'Matched files: %s\n' "${#files[@]}"
+
+If no .log files exist, the array is empty with nullglob enabled. Without it,
+the array may contain the literal string "*.log".
+
+    shopt -u nullglob
+
+2. failglob
+------------
+Default: OFF
+
+An unmatched glob causes Bash to report an error.
+
+    shopt -s failglob
+    printf '%s\n' *.no_such_extension
+
+If nothing matches, Bash reports a no-match error.
+
+    shopt -u failglob
+
+If both nullglob and failglob are enabled, failglob takes precedence for
+unmatched patterns.
+
+3. dotglob
+-----------
+Default: OFF
+
+Normally, * does not match names beginning with a dot, such as .env or
+.config. With dotglob enabled, * can match hidden names too.
+
+    shopt -s dotglob
+    printf '%s\n' *
+
+The special entries . and .. are not included by this option.
+
+    shopt -u dotglob
+
+Be careful with broad patterns and commands that delete or overwrite files:
+dotglob can include hidden configuration files.
+
+4. globstar
+------------
+Default: OFF
+
+When enabled, ** can match through multiple directory levels recursively.
+
+    shopt -s globstar
+    printf '%s\n' **/*.log
+
+Compare:
+    *.log       # Matches in the current directory
+    **/*.log    # Can match recursively when globstar is enabled
+
+Hidden files and directories still depend on hidden-file matching settings
+and the exact pattern.
+
+    shopt -u globstar
+
+5. nocaseglob
+--------------
+Default: OFF
+
+Filename glob matching ignores letter case when enabled.
+
+    shopt -s nocaseglob
+    printf '%s\n' *.jpg
+
+May match photo.jpg, PHOTO.JPG, and Photo.Jpg.
+
+    shopt -u nocaseglob
+
+This affects filename globbing, not every kind of text matching in Bash.
+
+6. extglob
+-----------
+Default: OFF
+
+Enables extended glob operators:
+
+    ?(pattern-list)  # Zero or one occurrence
+    *(pattern-list)  # Zero or more occurrences
+    +(pattern-list)  # One or more occurrences
+    @(pattern-list)  # Exactly one alternative
+    !(pattern-list)  # Anything except the listed pattern(s)
+
+Example:
+    shopt -s extglob
+    printf '%s\n' @(*.log|*.txt)
+
+This selects names matching either the .log or .txt alternative.
+
+    shopt -u extglob
+
+Extended globbing is a Bash feature, not POSIX sh syntax.
+
+7. globasciiranges
+------------------
+Controls whether character ranges such as [a-z] use ASCII ordering,
+regardless of the current locale.
+
+    shopt -s globasciiranges
+    printf '%s\n' [a-z]*
+
+This can make ASCII range matching more predictable across locales.
+Availability and defaults can vary by Bash version and environment.
+
+    shopt -u globasciiranges
+
+8. GLOBIGNORE (VARIABLE, NOT A SHOPT OPTION)
+-------------------------------------------
+GLOBIGNORE is a Bash variable that excludes matching names from glob results.
+
+    GLOBIGNORE='*.tmp'
+    printf '%s\n' *
+
+This excludes names matching *.tmp from the results of *.
+
+Important:
+- GLOBIGNORE is a variable, not a shell option.
+- Setting a non-empty GLOBIGNORE also changes hidden-file matching: Bash
+  behaves as though dotglob is enabled, except . and .. remain excluded.
+- Clear it when no longer needed:
+      unset GLOBIGNORE
+
+CHECKING AND CHANGING OPTIONS
+-----------------------------
+Check selected options:
+    shopt nullglob failglob dotglob globstar nocaseglob extglob
+
+Enable several options:
+    shopt -s nullglob globstar extglob
+
+Disable them:
+    shopt -u nullglob globstar extglob
+
+Print all option settings:
+    shopt
+
+Print selected settings in reusable form:
+    shopt -p nullglob failglob dotglob globstar nocaseglob extglob
+
+`shopt -p` may return a non-zero status when one or more requested options
+are disabled. That is normal for a status-reporting command.
+
+SAFE SCRIPTING EXAMPLE
+----------------------
+    #!/usr/bin/env bash
+    shopt -s nullglob
+
+    log_files=( *.log )
+
+    if ((${#log_files[@]} == 0)); then
+        printf 'No log files found.\n'
+    else
+        printf 'Found %d log file(s):\n' "${#log_files[@]}"
+        printf ' - %s\n' "${log_files[@]}"
+    fi
+
+Why this is useful:
+- nullglob makes the array empty when nothing matches.
+- Arrays preserve filenames containing spaces.
+- The script checks for no matches before processing files.
+
+QUICK REFERENCE
+---------------
+    nullglob         Unmatched patterns expand to nothing
+    failglob         Unmatched patterns cause an error
+    dotglob          * can match hidden files
+    globstar         ** can match recursively
+    nocaseglob       Ignore case in filename glob matching
+    extglob          Enable extended glob operators
+    globasciiranges  Use ASCII ordering for ranges such as [a-z]
+    GLOBIGNORE       Variable to exclude names from glob results
+
+REMEMBER
+--------
+- `shopt -s` enables a Bash shell option.
+- `shopt -u` disables it.
+- Options affect the current shell and relevant execution environment; they
+  are not automatically permanent settings.
+- In scripts, explicitly set the options the script depends on.
+- Preview matches with `printf '%s\n' pattern` before destructive commands
+  such as rm.
+- Globbing is filename pattern matching, not regular-expression matching.
+
+END OF RECAP

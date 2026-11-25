@@ -1,0 +1,241 @@
+BASH EXTENDED GLOBBING — RECAP
+===============================
+
+What is extended globbing?
+--------------------------
+Extended globbing (extglob) adds extra pattern operators to Bash's normal
+globbing syntax. It is useful when matching filenames with more precise
+rules, especially in shell scripts.
+
+Enable it in Bash:
+    shopt -s extglob
+
+Check whether it is enabled:
+    shopt extglob
+
+Disable it:
+    shopt -u extglob
+
+Important: Enable extglob before parsing commands or scripts that use these
+patterns. In scripts, put `shopt -s extglob` near the beginning.
+
+THE FIVE EXTENDED GLOB OPERATORS
+--------------------------------
+
+1. ?(pattern-list) — zero or one occurrence
+   Matches zero or one occurrence of any pattern in the list.
+
+    ls report?(s).txt
+
+   Matches:
+    report.txt
+    reports.txt
+
+2. *(pattern-list) — zero or more occurrences
+   Matches zero or more occurrences of any pattern in the list.
+
+    ls backup*(.old|.bak)
+
+   Matches names such as:
+    backup
+    backup.old
+    backup.bak
+    backup.old.old
+
+   The pattern list can contain alternatives. Use examples carefully because
+   the operator applies to the whole pattern inside the parentheses.
+
+3. +(pattern-list) — one or more occurrences
+   Matches one or more occurrences of any pattern in the list.
+
+    ls file+([0-9]).txt
+
+   Matches names such as:
+    file1.txt
+    file123.txt
+
+   It requires at least one digit between "file" and ".txt".
+
+4. @(pattern-list) — exactly one alternative
+   Matches exactly one of the listed patterns.
+
+    ls @(*.log|*.txt)
+
+   This matches names that fit either alternative: a .log name or a .txt
+   name. For a simple list of extensions, a clearer example is:
+    ls @(*.log|*.txt|*.conf)
+
+5. !(pattern-list) — anything except the listed patterns
+   Matches strings that do not match the pattern list.
+
+    ls !(*.log)
+
+   This can match names that do not end in .log. It does not mean "delete
+   everything except log files" by itself; it only selects matching names.
+
+PATTERN LISTS AND ALTERNATIVES
+------------------------------
+Use | inside parentheses to separate alternatives.
+
+    ls @(*.conf|*.ini)
+    # Names ending in .conf or .ini
+
+    ls file+([0-9]).txt
+    # "file", followed by one or more digits, then ".txt"
+
+    ls image?(s).png
+    # image.png or images.png
+
+These operators combine with ordinary glob characters such as *, ?, and
+character classes like [0-9].
+
+EXTGLOB VS NORMAL GLOBBING
+--------------------------
+Normal glob:
+    *.log
+    # Any filename ending in .log
+
+Extended glob:
+    @(*.log|*.txt)
+    # Either a .log filename or a .txt filename
+
+Normal glob:
+    file?.txt
+    # Exactly one character after "file"
+
+Extended glob:
+    file?(s).txt
+    # "file.txt" or "files.txt"
+
+Normal glob:
+    file[0-9].txt
+    # Exactly one digit
+
+Extended glob:
+    file+([0-9]).txt
+    # One or more digits
+
+EXTGLOB IN SCRIPTS
+------------------
+Example: process .log and .txt files.
+
+    #!/usr/bin/env bash
+    shopt -s extglob
+
+    for file in @(*.log|*.txt); do
+        [ -e "$file" ] || continue
+        printf 'Processing: %s\n' "$file"
+    done
+
+The `continue` check handles the case where the pattern remains literal
+because no file matches and nullglob is disabled.
+
+Example: select files that are not .log files.
+
+    shopt -s extglob
+
+    for file in !(*.log); do
+        [ -e "$file" ] || continue
+        printf '%s\n' "$file"
+    done
+
+Review the matched list before using patterns with commands that change or
+delete files.
+
+EXTGLOB WITH PARAMETER EXPANSION
+-------------------------------
+Extended glob patterns can also be useful inside Bash parameter expansion.
+
+    shopt -s extglob
+
+    filename='report.final.txt'
+    printf '%s\n' "${filename##+(.)}"
+
+The pattern above is not a useful way to remove a file extension; use the
+appropriate parameter-expansion pattern instead. For example:
+
+    filename='report.final.txt'
+    printf '%s\n' "${filename%.*}"
+    # report.final
+
+A clearer extglob example is removing one or more leading dots:
+
+    filename='...hidden'
+    printf '%s\n' "${filename##+(\.)}"
+    # hidden
+
+The exact pattern should be tested with representative input before relying
+on it in automation.
+
+IMPORTANT NOTES
+---------------
+- `shopt -s extglob` enables extended glob operators in Bash.
+- Extglob patterns are not POSIX shell syntax; scripts using them should
+  explicitly use Bash, for example `#!/usr/bin/env bash`.
+- `|` separates alternatives inside an extglob pattern.
+- Parentheses are part of the extglob syntax.
+- In a filename pattern, the slash `/` is not matched by wildcard operators.
+- Hidden files are generally not matched by ordinary patterns unless the
+  pattern begins with a dot or the relevant shell options allow it.
+- `extglob` is different from regular expressions and from `grep -E`.
+- Quote a pattern when passing it to another command that should interpret
+  the pattern itself, such as:
+      find . -name '@(*.log|*.txt)'
+  However, `find -name` uses its own glob syntax, not Bash extglob, so this
+  pattern will not behave as Bash extglob. Prefer:
+      find . -type f \( -name '*.log' -o -name '*.txt' \)
+
+COMMON MISTAKES
+---------------
+1. Forgetting to enable extglob:
+       shopt -s extglob
+
+2. Assuming extglob works in every shell:
+   It is a Bash feature; other shells may not support it.
+
+3. Confusing extglob with regex:
+   `+(...)` is Bash pattern syntax, not a regular-expression operator.
+
+4. Using extglob patterns with `find -name`:
+   `find` does not use Bash's extended glob syntax. Use `-name` with `-o`
+   conditions or use Bash to expand the pattern.
+
+5. Running a destructive command without checking matches:
+   First preview:
+       printf '%s\n' !(*.log)
+
+QUICK REFERENCE
+---------------
+    ?(list)  Zero or one occurrence
+    *(list)  Zero or more occurrences
+    +(list)  One or more occurrences
+    @(list)  Exactly one alternative
+    !(list)  Anything except the listed pattern(s)
+
+Remember:
+    shopt -s extglob
+
+QUICK PRACTICE
+--------------
+Assume extglob is enabled and these names exist:
+    file.txt
+    files.txt
+    file1.txt
+    file123.txt
+    app.log
+    notes.md
+
+What does each pattern select?
+
+    file?(s).txt
+    file+([0-9]).txt
+    @(*.log|*.md)
+    !(*.txt)
+
+Answers:
+    file?(s).txt      -> file.txt, files.txt
+    file+([0-9]).txt  -> file1.txt, file123.txt
+    @(*.log|*.md)     -> app.log, notes.md
+    !(*.txt)          -> app.log, notes.md
+
+END OF RECAP

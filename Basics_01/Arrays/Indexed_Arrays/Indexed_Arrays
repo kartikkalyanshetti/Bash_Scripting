@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+array=(foo bar baz)
+
+echo "${array[0]}"
+echo "${array[1]}"
+echo "${array[2]}"
+echo
+echo "${array[-1]}"
+echo "${array[-2]}"
+echo "${array[-3]}"
+
+##-1 we can travese backwards in the array aswell by - signs
+echo
+## you can also define teh index in varibale as use it as index 
+idx=1
+echo "${array[idx]}"
+

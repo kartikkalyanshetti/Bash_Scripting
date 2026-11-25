@@ -1,0 +1,56 @@
+# Bash: stdout, stderr, and Redirection
+
+# Standard Streams (File Descriptors)
+
+* stdin (0): Standard input — receives input from the keyboard or another source.
+* stdout (1): Standard output — displays normal output.
+* stderr (2): Standard error — displays error messages.
+
+`>&1` and `>&2` refer to file descriptors, while `/dev/null` discards redirected output.
+
+## Understanding the Output
+
+*1. `var=$(my-func 1>/dev/null)` — Discard stdout**
+
+* Normal output is discarded.
+* Error output appears in the terminal.
+* `var` is empty; `code=0`.
+
+*2. `var=$(my-func 2>&1)` — Redirect stderr to stdout**
+
+* Both stdout and stderr are captured in `var`.
+* Both messages appear when `var` is printed.
+* `code=0`.
+
+*3. `var=$(my-func 1>&2)` — Redirect stdout to stderr**
+
+* Both messages go to stderr and appear in the terminal.
+* `var` is empty; `code=0`.
+
+*4. `var=$(my-func 2>/dev/null)` — Discard stderr**
+
+* Error output is discarded.
+* Normal output is captured in `var`.
+* `code=0`.
+
+*5. `var=$(my-func >/dev/null 2>&1)` — Discard both**
+
+* stdout is redirected to `/dev/null`.
+* stderr is redirected to stdout's current destination, also `/dev/null`.
+* `var` is empty; `code=0`.
+
+*6. `var=$(my-func 2>&1 >/dev/null)` — Redirection order matters**
+
+* First, stderr is redirected to stdout's original destination (the command substitution pipe).
+* Then, stdout is redirected to `/dev/null`.
+* Only the stderr message is captured in `var`.
+* `code=0`.
+
+# Key Takeaways
+
+* `$(command)` captures stdout by default, not stderr.
+* `2>&1` redirects stderr to stdout's **current destination**.
+* Redirections are processed from left to right.
+* `$?` stores the exit status of the last command. `0` means success; a nonzero value generally indicates failure.
+* `>/dev/null 2>&1` discards both streams, whereas `2>&1 >/dev/null` captures stderr and discards stdout.
+

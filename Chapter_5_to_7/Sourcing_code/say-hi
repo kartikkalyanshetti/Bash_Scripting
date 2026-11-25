@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+source ./lib/greetings
+echo "source output :"
+greet kartik
+greet dave
+goodbye bug
+
+echo " " 
+echo ". output : "
+
+. ./lib/greetings
+
+greet Elliot
+goodbye Mr.Robot

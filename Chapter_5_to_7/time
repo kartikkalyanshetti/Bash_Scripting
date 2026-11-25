@@ -1,0 +1,22 @@
+time command
+
+
+
+Example:
+time ls
+
+Output : 
+real    0m0.003s
+user    0m0.001s
+sys     0m0.002s
+
+What they mean
+real → Actual elapsed time from start to finish.
+user → CPU time spent executing your program's code in user space.
+sys → CPU time spent in the kernel on behalf of the program.
+
+
+time → measures command execution time
+real  → wall-clock time
+user  → user-space CPU time
+sys   → kernel CPU time

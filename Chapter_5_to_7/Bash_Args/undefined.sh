@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+foo=1
+bar=2
+
+echo "foo is $foo"
+echo "bar is $bar"
+echo "baz is $baz"

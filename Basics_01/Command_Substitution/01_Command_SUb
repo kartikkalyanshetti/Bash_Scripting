@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+i=5
+my-fun() {
+	i=6
+	echo HI!
+	echo Hello,How are you!
+}
+#thing=$(my-fun)
+#echo "$thing"
+echo "-----------"
+echo "I is $i"
+echo "-----------"
+key=${ my-fun; }
+echo "$key"
+echo "I is $i"

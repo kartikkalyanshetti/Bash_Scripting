@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+s=$1
+case "$s" in
+	kartik)
+		echo hi kartik!
+		;;
+	buddy)
+		echo ohh there he is 
+		;;
+	*)	
+		echo "Who are you?"
+		;;
+esac

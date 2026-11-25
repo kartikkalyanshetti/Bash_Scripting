@@ -1,0 +1,43 @@
+#!//usr/bin/env bash
+
+# Variables a,b,c values are seen as string
+
+a=07
+
+echo "A:$a" # Keeps the Zero as it is 
+echo "A: $(( a ))" # Removes the Zero
+
+b=08
+
+
+echo "B:$b" # Keeps the Zero
+echo "B:$(( b ))"
+
+# In Bash Arithmetic Number starting with 0 is considered Octals
+# Ocatls : 0 1 2 3 4 5 6 7
+# Hence if we give the input 08 in arithmetic expansion its says invaalid octal Number
+
+c=010
+echo "C:$c" # Keeps the Zero
+echo "C:$(( 10#$c ))" 
+
+# 10# expliitly tells bash to treat teh number using base 10
+# this prevents bash from treating 010 as an octal
+#Therefore leading zero is removed and result will be 10
+
+
+# Assigns the value "010" to variable d.
+# At this point, it is stored as a normal string.
+d=010
+
+# Normal variable expansion ($d).
+# Bash prints the value exactly as stored, including the leading zero.
+echo "D:$d"          # Output: D:010
+
+# Arithmetic expansion ($(( d ))).
+# Bash treats 010 as an octal (base 8) number because it starts with 0.
+# Octal 010 is equal to decimal 8.
+echo "D:$(( d ))"    # Output: D:8
+
+
+

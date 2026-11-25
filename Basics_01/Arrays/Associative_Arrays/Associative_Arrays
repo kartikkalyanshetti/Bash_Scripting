@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+declare -A array
+
+array[foo]=1
+array[bar]=2
+array[baz]=3
+
+echo "${array[foo]}"
+echo "${array[bar]}"
+echo "${array[baz]}"
+
+echo "${array[@]}"
+echo
+echo "${!array[@]}"
+
+##looping in Associative arrays: 
+
+for key in "${!array[@]}"; do
+	value=${array[$key]}
+	echo "got $key : $value"
+done

@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+my-func() {
+	echo 'this goes to stdout' >&1
+	echo 'this goes to stderr' >&2
+	return 0
+}
+
+
+echo "--------------------------------"
+#Discard stdout messages
+var=$(my-func 1>/dev/null )
+code=$?
+echo "output=$var, code=$code"
+
+echo "--------------------------------"
+
+#redirect stderr to stdouts current destination
+var=$(my-func 2>&1 )
+code=$?
+
+echo "output=$var, code=$code"
+
+echo "--------------------------------"
+#redirect stdout to stderr current destination
+var=$(my-func 1>&2 )
+code=$?
+echo "output=$var, code=$code"
+
+echo "--------------------------------"
+#Discard error messages
+var=$(my-func 2>/dev/null )
+code=$?
+echo "output=$var, code=$code"
+
+echo "--------------------------------"
+#Discard both stdout and stderr
+var=$(my-func >/dev/null 2>&1 )
+code=$?
+echo "output=$var, code=$code"
+
+echo "--------------------------------"
+
+var=$(my-func 2>&1 >/dev/null )
+code=$?
+echo "output=$var, code=$code"
+

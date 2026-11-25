@@ -1,0 +1,20 @@
+#!/usr/bin/env
+
+arr=(
+	foo
+	bar
+	baz
+)
+IFS=,
+
+echo "${arr[*]}"
+
+Text="Orange,Red,Blue"
+
+#IFS=,
+
+for key in $Text; do
+	echo "$key" 
+done
+
+

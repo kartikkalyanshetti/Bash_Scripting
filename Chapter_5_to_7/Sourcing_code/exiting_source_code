@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+. ./lib/greetingz || exit 1
+
+greet kartik
+greet dave
+goodbye bug
+

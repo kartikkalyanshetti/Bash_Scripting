@@ -1,0 +1,206 @@
+# tr Command
+
+`tr` is used to translate, replace, delete, or squeeze characters.
+
+It works with characters, not fields or columns.
+
+## Syntax
+
+
+tr [OPTION] SET1 [SET2]
+
+---
+
+## 1. Translate Characters
+
+Convert lowercase letters to uppercase:
+
+echo "hello world" | tr 'a-z' 'A-Z'
+
+Output:
+
+HELLO WORLD
+
+Here:
+
+SET1 = a-z
+SET2 = A-Z
+
+a -> A
+b -> B
+c -> C
+...
+z -> Z
+
+---
+
+## 2. Replace Characters
+
+Replace spaces with `_`:
+
+echo "hello world" | tr ' ' '_'
+
+Output:
+
+hello_world
+
+# Replace `:` with `,`:
+
+echo "Kartik:23:Pune" | tr ':' ','
+
+Output:
+
+Kartik,23,Pune
+
+---
+
+## 3. Delete Characters
+
+Use `-d` to delete characters.
+
+Remove all digits:
+
+echo "Kartik123" | tr -d '0-9'
+
+Output:
+
+Kartik
+
+Remove spaces:
+
+echo "hello world" | tr -d ' '
+
+Output:
+
+helloworld
+
+---
+
+## 4. Squeeze Characters
+
+Use `-s` to replace repeated consecutive characters
+with a single character.
+
+echo "hello     world" | tr -s ' '
+
+Output:
+
+hello world
+
+Another example:
+
+echo "aaabbbccc" | tr -s 'a-c'
+
+Output:
+
+abc
+
+---
+
+## 5. Complement
+
+`-c` works with the complement of SET1.
+
+Keep only digits:
+
+echo "Kartik123DevOps456" | tr -cd '0-9'
+
+Output:
+
+123456
+
+Explanation:
+
+-c  -> complement
+-d  -> delete
+
+tr -cd '0-9'
+
+Delete everything except digits.
+
+---
+
+## 6. Using tr With a File
+
+`tr` normally reads from standard input.
+
+For example:
+
+tr ',' '\t' < normal.csv
+
+This converts commas into tabs.
+
+Example:
+
+name,age,city,department
+Kartik,23,Pune,DevOps
+Rahul,25,Mumbai,Backend
+
+becomes:
+
+name    age    city    department
+Kartik  23     Pune    DevOps
+Rahul   25     Mumbai  Backend
+
+---
+
+## Common Options
+
+-d    Delete characters
+-s    Squeeze repeated characters
+-c    Complement SET1
+-C    Complement SET1 based on characters
+
+---
+
+## Common Patterns
+
+Translate:
+
+command | tr 'SET1' 'SET2'
+
+Delete:
+
+command | tr -d 'SET'
+
+Squeeze:
+
+command | tr -s 'SET'
+
+Complement + delete:
+
+command | tr -cd 'SET'
+
+---
+
+## Key Takeaway
+
+tr
+ |
+ +-- Translate
+ |     tr 'a-z' 'A-Z'
+ |
+ +-- Delete
+ |     tr -d '0-9'
+ |
+ +-- Squeeze
+ |     tr -s ' '
+ |
+ +-- Complement
+       tr -cd '0-9'
+
+`tr` is mainly used for simple character-level
+transformations in Bash pipelines.
+
+It normally receives input through:
+
+command | tr ...
+
+or:
+
+tr ... < file
+
+It does not normally take a filename as a direct argument:
+
+tr ... file.txt    # incorrect usage
+

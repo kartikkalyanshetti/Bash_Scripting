@@ -1,0 +1,9 @@
+#!usr/bin/env bash
+
+while [[ -f File.txt ]]; do
+	echo "File.txt exists"
+	sleep 1
+done
+
+echo "File is gone"
+

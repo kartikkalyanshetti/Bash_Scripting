@@ -1,0 +1,256 @@
+# Bash Script Options
+
+Bash provides command-line options that can be used to **check, debug, and control how a script is executed**.
+
+Basic syntax:
+
+bash [OPTION] script.sh
+
+---
+
+## 1. `bash -n`
+
+`-n` checks the script for **syntax errors without executing it**.
+
+bash -n script.sh
+
+If there are no syntax errors:
+
+No output
+
+If there is a syntax error:
+
+script.sh: line 5: syntax error near unexpected token `fi'
+
+### Important
+
+-n -> Check syntax
+     Do NOT execute the script
+
+Useful before running a script after making changes.
+
+---
+
+## 2. `bash -x`
+
+`-x` enables **execution tracing**.
+
+It prints each command after Bash expands it,before executing it.
+
+Example:
+
+#!/usr/bin/env bash
+
+name="Kartik"
+echo "Hello $name"
+
+Run:
+
+bash -x script.sh
+
+Output:
+
++ name=Kartik
++ echo 'Hello Kartik'
+Hello Kartik
+
+The lines beginning with `+` show what Bash is executing.
+
+### Important
+
+-x -> Trace commands while executing
+
+This is extremely useful for debugging Bash scripts.
+
+---
+
+## 3. `bash -v`
+
+`-v` prints shell input lines **as Bash reads them**.
+
+bash -v script.sh
+
+Example script:
+
+name="Kartik"
+echo "Hello $name"
+
+Output will show the script lines as they are read,
+followed by their output.
+
+name="Kartik"
+echo "Hello $name"
+Hello Kartik
+
+### Difference from `-x`
+
+-v -> Shows the original commands
+-x -> Shows commands after expansion
+
+---
+
+## 4. `bash -e`
+
+`-e` causes Bash to exit when a command returns a non-zero exit status, subject to Bash's rules for contexts where `-e` is ignored.
+
+bash -e script.sh
+
+Example:
+
+#!/usr/bin/env bash
+
+echo "Start"
+
+false
+
+echo "End"
+
+With:
+
+bash -e script.sh
+
+the script exits after `false`, so:
+
+Start
+
+is printed, but:
+
+End
+
+is not reached.
+
+### Important
+
+-e -> Exit when a command fails
+
+---
+
+## 5. `bash -u`
+
+`-u` treats an unset variable as an error.
+
+bash -u script.sh
+
+Example:
+
+#!/usr/bin/env bash
+
+echo "$name"
+
+If `name` has not been set, Bash reports an unbound-variable error instead of silently treating it as an empty value.
+
+### Important
+
+-u -> Treat unset variables as errors
+
+---
+
+## 6. Combining Options
+
+Options can be combined.
+
+For example:
+
+bash -xe script.sh
+
+means:
+
+-x -> Show commands being executed
+-e -> Exit when a command fails
+
+You can also write:
+
+bash -xeu script.sh
+
+which enables:
+
+-x -> Execution tracing
+-e -> Exit on command failure
+-u -> Error on unset variables
+
+---
+
+## 7. `bash -c`
+
+`-c` tells Bash to execute a command string.
+
+bash -c 'echo "Hello from Bash"'
+
+Output:
+
+Hello from Bash
+
+This is useful when you need to execute Bash code from another command or program.
+
+---
+
+## 8. Check Syntax + Debug
+
+A useful workflow when developing a script:
+
+### Step 1: Check syntax
+
+bash -n script.sh
+
+### Step 2: Run with debugging
+
+bash -x script.sh
+
+### Step 3: Run normally
+
+bash script.sh
+
+Think:
+
+           Bash Script
+               |
+       +-------+-------+
+       |       |       |
+      -n      -x      normal
+       |       |       |
+    Check    Debug    Run
+    syntax
+
+---
+
+## Quick Reference
+
+-n    Check syntax without executing
+-x    Print commands as they are executed
+-v    Print shell input as it is read
+-e    Exit when a command fails
+-u    Error on unset variables
+-c    Execute a command string
+
+### Most Important for Debugging
+
+bash -n script.sh
+
+Check for syntax errors.
+
+bash -x script.sh
+
+Trace execution.
+
+bash -xe script.sh
+
+Trace execution and stop on errors.
+
+---
+
+## Key Takeaway
+
+-n -> "Is my script syntactically correct?"
+
+-x -> "Show me what Bash is executing."
+
+-v -> "Show me what Bash is reading."
+
+-e -> "Stop when a command fails."
+
+-u -> "Don't allow unset variables."
+
+-c -> "Execute this Bash command/string."
+
+These are **Bash invocation options**, not positional arguments such as `$1`, `$2`, or `$@`.
+

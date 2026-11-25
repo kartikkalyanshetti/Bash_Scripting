@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+i=1
+
+((i++)) 
+
+echo "$i"
+
+a=5
+(( a *=2 ))
+
+echo "$a"
+
+b=10
+
+(( b>>=1 )) #Bitwise operatiion
+
+echo "$b"
+
+#FInding Maximum number out of two
+x=10
+y=20
+
+(( max=x>y ? x:y ))
+
+echo "Max=$max"

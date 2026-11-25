@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+. ./lib/greetings_2.0 || exit 1
+echo "Example for parenthisis() (	)function or sub shell"
+name="buddy"
+echo "before greeting: $name"
+greet dave
+echo "after greeting: $name"
+
+echo "--------------------------------- "
+
+echo "Example for curls function() {	}"
+name="buddy"
+echo "before greeting: $name"
+goodbye dave
+echo "after greeting: $name"
+

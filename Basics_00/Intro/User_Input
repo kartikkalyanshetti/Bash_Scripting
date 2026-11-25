@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+read -p 'Hello!Enter your name:' name
+echo "Hello $name"

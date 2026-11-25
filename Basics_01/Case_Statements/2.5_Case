@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+hello(){
+	local S=$1
+	echo "hello $S!"
+}
+
+goodbye(){
+	local S=$1
+	echo "Goodbye $S!"
+}
+
+lmao(){
+	local S=$1
+	echo "lmao $S"
+}
+
+if (($# == 0 )); then
+	echo "name required" >&2
+	exit 1
+fi
+
+for name in "$@"; do
+	case "$name" in
+		d*) hello "$name" !;;&
+		*k) goodbye "$name";;&
+		k*) lmao "$name";;&	
+		*) echo "Bye Bye! "$name"";;&
+	esac
+done
